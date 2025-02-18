@@ -80,7 +80,7 @@ func (w *Walker) visit(maze [][]*Node) {
 			}
 
 			if v.value == " " && slices.Index(w.visited, v) < 0 {
-				w.queue = append([]*Node{v}, w.queue...)
+				w.queue = append(w.queue, v)
 			}
 		}
 
