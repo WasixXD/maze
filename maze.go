@@ -56,10 +56,19 @@ func printMaze(maze *[][]*Node) {
 			fmt.Print(k.value)
 		}
 	}
-	time.Sleep(20 * time.Millisecond)
+	time.Sleep(50 * time.Millisecond)
+}
+
+func findShortest(parents map[*Node]*Node, end *Node, maze *[][]*Node) {
+
+	for i := end; i != nil; i = parents[i] {
+		(*maze)[i.y][i.x].value = "*"
+	}
 }
 
 func (w *Walker) visit(maze [][]*Node) {
+	parents := make(map[*Node]*Node)
+	parents[w.queue[0]] = nil
 	for len(w.queue) > 0 {
 		printMaze(&maze)
 
@@ -74,13 +83,18 @@ func (w *Walker) visit(maze [][]*Node) {
 		for _, v := range directions {
 
 			if v.value == "v" {
-
 				printMaze(&maze)
+				findShortest(parents, removed, &maze)
 				return
 			}
 
 			if v.value == " " && slices.Index(w.visited, v) < 0 {
-				w.queue = append(w.queue, v)
+				parents[v] = removed
+				// DFS
+				// w.queue = append(w.queue, v)
+
+				// BFS
+				w.queue = append([]*Node{v}, w.queue...)
 			}
 		}
 
@@ -125,5 +139,6 @@ func main() {
 
 	maze = append(maze, line)
 	walker.visit(maze)
+	printMaze(&maze)
 
 }
